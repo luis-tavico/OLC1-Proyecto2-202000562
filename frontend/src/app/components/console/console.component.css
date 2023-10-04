@@ -1,0 +1,61 @@
+/* Pestañas */
+.btnTab {
+    border: none;
+    width: 86%;
+    background-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btnDel {
+    width: 14%;
+    border-radius: 15px;
+    display: inline-block; 
+    text-align: center; 
+}
+
+.btnDel:hover {
+    background-color: #343a40;
+    color: red;
+}
+
+/* Numeracion */
+.containerNumberLine {
+    text-align: right;
+}
+
+/* Contenedo de consola */
+.containerInputCode {
+    height: 505px;
+    overflow: auto;
+    background-color: #343a40;
+}
+
+.containerInputCode::-webkit-scrollbar {
+    width: 8px;
+}
+
+.containerInputCode::-webkit-scrollbar-track {
+    background-color: transparent; 
+}
+
+.containerInputCode::-webkit-scrollbar-thumb {
+    border-radius: 25px;
+    background-color: #99A3A4;
+}
+
+/* Consolas */
+textarea {
+    width: 100%;
+    resize: none;
+    border: none;
+    overflow-y: hidden;
+    font-family: monospace;
+    background-color: #343a40;
+    color:white;
+}
+
+textarea:focus {
+    outline: none;
+}

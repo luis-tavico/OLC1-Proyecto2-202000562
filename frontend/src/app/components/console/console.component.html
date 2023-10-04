@@ -1,1 +1,67 @@
-<p>console works!</p>
+<div class="col-12 px-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-2"><button>Archivo</button></div>
+                <div class="col-2"><button (click)="add_tab()">Nuevo</button></div>
+                <!--<div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Opciones
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Opción 1</a>
+                      <a class="dropdown-item" href="#">Opción 2</a>
+                      <a class="dropdown-item" href="#">Opción 3</a>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+        <div class="col-12"></div>
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-1"></div>
+                        <div class="col-11"></div>
+                        <div class="col-1 py-4"></div>
+                        <div class="col-11 py-3">Entrada</div>
+                        <div class="col-1"></div>
+                        <div class="col-11">
+                            <div class="containerTabs row">
+                                <div class="boton border border-secondary col-3 px-0" *ngFor="let tab of tabs; let i = index;">
+                                    <div class="bg-secondary pe-1" *ngIf="currentTab==i; else noSelected" ><button class="btnTab text-white" (click)="select_tab(i)">{{ tab.nombre }}</button><i class="btnDel fa-solid fa-xmark" (click)="delete_tab(i)"></i></div>
+                                    <ng-template #noSelected><div class="pe-1"><button class="btnTab text-white" (click)="select_tab(i)">{{ tab.nombre }}</button><i class="btnDel fa-solid fa-xmark" (click)="delete_tab(i)"></i></div></ng-template>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="containerInputCode col-12 border border-secondary">
+                            <div class="row">
+                                <div class="containerNumberLine col-1 bg-dark py-2">
+                                    <!--<div class="col-12" *ngFor="let lineNumber of lineNumbers">{{ lineNumber }}</div>-->
+                                    <ng-container *ngFor="let line of lines; let i = index">{{ i + 1 }}<br/></ng-container>
+                                </div>
+                                <div class="col-11 p-0">
+                                    <!--<textarea #inputConsole class="" id="textarea1" rows="20" spellcheck="false"></textarea>-->
+                                    <!--<textarea #inputConsole class="" id="textarea1" rows="20" spellcheck="false" [(ngModel)]="editorContent" (input)="updateLines()" class="editor-textarea"></textarea>-->
+                                    <textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="inputConsoleContent" (input)="updateLines()"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Opciones
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#">Opción 1</a>
+                          <a class="dropdown-item" href="#">Opción 2</a>
+                          <a class="dropdown-item" href="#">Opción 3</a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
