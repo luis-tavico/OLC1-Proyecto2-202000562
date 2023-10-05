@@ -30,7 +30,14 @@ export class ConsoleComponent implements OnInit {
     this.updateLinesOutputConsole();
   }
 
-  // Options
+  // Options File
+  openFile() {
+    
+  }
+
+
+
+  // Option Run
   run() {
     alert(this.tabs[this.currentTab].contenido_actual);
   }

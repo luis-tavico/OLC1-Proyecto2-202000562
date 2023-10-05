@@ -5,9 +5,9 @@
                 <div class="dropdown">
                     <button class="btnOpcion dropdown-toggle border border-secondary px-4 py-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Archivo</button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item text-white" (click)="add_tab()">Nuevo</a>
-                      <a class="dropdown-item text-white">Abrir</a>
-                      <a class="dropdown-item text-white">Guardar</a>
+                      <label class="dropdown-item text-white" (click)="add_tab()">Nuevo</label>
+                      <label class="dropdown-item text-white" for="btnUpload">Abrir</label><input id="btnUpload" type="file"  accept=".adsj">
+                      <label class="dropdown-item text-white">Guardar</label>
                     </div>
                 </div>
                 <!--
@@ -30,6 +30,15 @@
                       <a class="dropdown-item text-white" href="#">Arbol de Analisis</a>
                     </div>
                 </div>
+                
+                <div>
+                    <label class="boton lblUpload" for="btnUpload">Abrir</label>
+                    <input id="btnUpload" type="file"  accept=".adsj">
+                </div>
+
+
+
+
             </div>
         </div>
         <div class="col-12">

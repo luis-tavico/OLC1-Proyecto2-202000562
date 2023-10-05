@@ -94,3 +94,9 @@ textarea:focus {
 textarea::-webkit-scrollbar {
     height: 0px;
 }
+
+/* boton Subir */
+
+#btnUpload {
+    display: none;
+}
