@@ -15,58 +15,66 @@ export class ConsoleComponent implements OnInit {
   tabs: Tab[] = [];
   currentTab: number = 0;
   //Consola Input
-  inputConsoleContent = '';
+  //inputConsoleContent = '';
   linesInputConsole: string[] = [];
   //Consola Output
   outputConsoleContent = '';
   linesOutputConsole: string[] = [];
+  //[ruta, nombre, contenido_anterior, contenido_actual]
 
   constructor() { }
 
   ngOnInit(): void {
-    this.tabs.push(new Tab("", "sin_titulo", ""));
+    this.tabs.push(new Tab("", "sin_titulo", "", ""));
     this.updateLinesInputConsole();
     this.updateLinesOutputConsole();
   }
-  
+
   // Options
   run() {
-    const code = this.inputConsole.nativeElement.value
-    this.outputConsoleContent = code;
-    //this.outputConsole.nativeElement.value = code;
-    this.updateLinesOutputConsole();
+    alert(this.tabs[this.currentTab].contenido_actual);
   }
 
   // Tabs
+  select_tab(i:number) {
+    this.currentTab = i;
+    this.updateLinesInputConsole();
+  }
+
   add_tab() {
     if (this.tabs.length < 4) {
-      //[ruta, nombre, contenido]
-      this.tabs.push(new Tab("", "sin_titulo", ""));
+      this.tabs.push(new Tab("", "sin_titulo", "", ""));
+      this.currentTab = this.tabs.length - 1;
+      this.updateLinesInputConsole();
     } else {
       alert("Ha llegado al límite de pestañas.");
     }
   }
   
   delete_tab(i:number) {
+    if (this.tabs[i].contenido_anterior != this.tabs[i].contenido_actual) {
+      if (this.tabs[i].nombre == "sin_titulo") {
+        alert("¿Desea guardar el archivo?");
+      } else {
+        alert("¿Desea guardar los cambio en el archivo " + this.tabs[i].nombre + "?");
+      }
+    }
     if (this.tabs.length > 1) {
       if (this.currentTab == i) {
-        this.currentTab = i-1;
+        if (i != 0) {
+          this.currentTab = i-1;
+        }
         this.tabs.splice(i, 1);
       } else {
+        if (this.currentTab > i) {
+          this.currentTab = this.currentTab-1;
+        }
         this.tabs.splice(i, 1);
       }
-    } else if (this.tabs.length == 1) {
-      const contenido = this.inputConsole.nativeElement.textContent;
+    } else {
+      this.tabs[i] = new Tab("", "sin_titulo", "", "");
     }
-  }
-  
-  select_tab(i:number) {
-    this.currentTab = i;
-    //this.inputConsole.nativeElement.value = this.tabs[i].contenido;
-    var content = this.inputConsole.nativeElement.value
-    var lineArray: string[];
-    lineArray = content.split('\n');
-    //
+    this.updateLinesInputConsole();
   }
 
   // Consoles
@@ -76,7 +84,8 @@ export class ConsoleComponent implements OnInit {
   }
 
   updateLinesInputConsole() {
-    this.linesInputConsole = this.inputConsoleContent.split('\n');
+    //this.linesInputConsole = this.inputConsoleContent.split('\n');
+    this.linesInputConsole = this.tabs[this.currentTab].contenido_actual.split('\n');
   }
 
   updateLinesOutputConsole() {

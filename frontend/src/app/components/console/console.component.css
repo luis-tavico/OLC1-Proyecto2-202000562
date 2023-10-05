@@ -50,6 +50,7 @@
 /* Numeracion */
 .containerNumberLine {
     text-align: right;
+    border-right: 1px solid #343a40;
     background-color: #1F2326;
 }
 
@@ -73,18 +74,23 @@
     background-color: #99A3A4;
 }
 
-
 /* Consolas */
 textarea {
     width: 100%;
     resize: none;
     border: none;
-    overflow-y: hidden;
-    font-family: monospace;
     background-color: #343a40;
     color:white;
+    overflow-y: hidden;
+    overflow-x: auto;
+    font-family: monospace;
+    white-space: nowrap;
 }
 
 textarea:focus {
     outline: none;
+}
+
+textarea::-webkit-scrollbar {
+    height: 0px;
 }
