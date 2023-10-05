@@ -21,6 +21,10 @@
     cursor: pointer;
 }
 
+.dropdown-item:focus {
+    outline: none;
+}
+
 /* Pestañas */
 .btnTab {
     border: none;
@@ -49,7 +53,6 @@
 
 /* Numeracion */
 .containerNumberLine {
-    text-align: right;
     border-right: 1px solid #343a40;
     background-color: #1F2326;
 }

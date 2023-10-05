@@ -2,42 +2,31 @@
     <div class="row">
         <div class="col-12">
             <div class="row">
-                <div class="dropdown">
-                    <button class="btnOpcion dropdown-toggle border border-secondary px-4 py-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Archivo</button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <label class="dropdown-item text-white" (click)="add_tab()">Nuevo</label>
-                      <label class="dropdown-item text-white" for="btnUpload">Abrir</label><input id="btnUpload" type="file"  accept=".adsj">
-                      <label class="dropdown-item text-white">Guardar</label>
-                    </div>
-                </div>
-                <!--
-                <div class="dropdown">
-                    <button class="btnOpcion dropdown-toggle border border-secondary border-left-0 px-3 py-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pestaña</button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item text-white" href="#">Action</a>
-                      <a class="dropdown-item text-white" href="#">Another action</a>
-                      <a class="dropdown-item text-white" href="#">Something else here</a>
-                    </div>
-                </div>
-                -->
-                <div><button class="btnOpcion border border-secondary border-left-0 px-4 py-1" (click)="run()"><i class="fa-solid fa-play fa-xs"></i> Ejecutar</button></div>
-                <div class="dropdown">
-                    <button class="btnOpcion dropdown-toggle border border-secondary  border-left-0 px-4 py-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reporte</button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item text-white" href="#">Tokens</a>
-                      <a class="dropdown-item text-white" href="#">Errores</a>
-                      <a class="dropdown-item text-white" href="#">Tabla de Simbolos</a>
-                      <a class="dropdown-item text-white" href="#">Arbol de Analisis</a>
-                    </div>
-                </div>
                 
-                <div>
-                    <label class="boton lblUpload" for="btnUpload">Abrir</label>
-                    <input id="btnUpload" type="file"  accept=".adsj">
+                <div class="dropdown">
+                    <button class="btnOpcion dropdown-toggle border border-secondary border-right-0 px-4 py-1" type="button" data-toggle="dropdown" aria-expanded="false">Archivo</button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item text-white" type="button" (click)="add_tab()">Nuevo</button></li>
+                        <li><input #inputFileOpen type="file" style="display: none;" (change)="openFile($event)"/><button class="dropdown-item text-white" type="button" (click)="openFileExplorer(inputFileOpen)">Abrir</button></li>
+                        <li><input #inputFileSave type="file" style="display: none" (change)="handleFileChange($event)" accept=".txt"/><button class="dropdown-item text-white" type="button" (click)="openFileExplorer(inputFileSave)">Guardar</button></li>
+                    </ul>
                 </div>
-
-
-
+                <div class="dropdown">
+                    <button class="btnOpcion dropdown-toggle border border-secondary border-right-0 px-4 py-1" type="button" data-toggle="dropdown" aria-expanded="false">Pestaña</button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item text-white" type="button">pestaña</button></li>
+                    </ul>
+                </div>
+                <div><button class="btnOpcion border border-secondary border-right-0 px-4 py-1" (click)="run()"><i class="fa-solid fa-play fa-xs"></i> Ejecutar</button></div>
+                <div class="dropdown">
+                    <button class="btnOpcion dropdown-toggle border border-secondary px-4 py-1" type="button" data-toggle="dropdown" aria-expanded="false">Reporte</button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item text-white" type="button">Tokens</button></li>
+                        <li><button class="dropdown-item text-white" type="button">Errores</button></li>
+                        <li><button class="dropdown-item text-white" type="button">Tabla de Simbolos</button></li>
+                        <li><button class="dropdown-item text-white" type="button">Arbol de Analisis</button></li>
+                    </ul>
+                </div>         
 
             </div>
         </div>
@@ -78,11 +67,10 @@
                     <div class="row">
                         <div class="containerConsole containerInputCode col-12 border border-secondary pr-4">
                             <div class="row">
-                                <div class="containerNumberLine col-1 py-2">
+                                <div class="containerNumberLine text-right col-1 py-2">
                                     <ng-container *ngFor="let line of linesInputConsole; let i = index">{{ i + 1 }}<br/></ng-container>
                                 </div>
                                 <div class="col-11 p-0">
-                                    <!--<textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="inputConsoleContent" (input)="updateLinesInputConsole()"></textarea>-->
                                     <textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="tabs[currentTab].contenido_actual" (input)="updateLinesInputConsole()"></textarea>
                                 </div>
                             </div>
@@ -93,7 +81,7 @@
                     <div class="row">
                         <div class="containerConsole containerOutputCode col-12 border border-secondary pr-4">
                             <div class="row">
-                                <div class="containerNumberLine col-1 py-2">
+                                <div class="containerNumberLine text-right col-1 py-2">
                                     <ng-container *ngFor="let line of linesOutputConsole; let i = index">{{ i + 1 }}<br/></ng-container>
                                 </div>
                                 <div class="col-11 p-0">

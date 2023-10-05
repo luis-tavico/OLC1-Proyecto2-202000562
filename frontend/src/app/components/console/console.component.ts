@@ -11,6 +11,7 @@ export class ConsoleComponent implements OnInit {
   @ViewChild('containerTabs') containerTabs!: ElementRef;
   @ViewChild('inputConsole') inputConsole!: ElementRef;
   @ViewChild('outputConsole') outputConsole!: ElementRef;
+
   //Pestañas
   tabs: Tab[] = [];
   currentTab: number = 0;
@@ -21,7 +22,7 @@ export class ConsoleComponent implements OnInit {
   outputConsoleContent = '';
   linesOutputConsole: string[] = [];
   //[ruta, nombre, contenido_anterior, contenido_actual]
-
+  
   constructor() { }
 
   ngOnInit(): void {
@@ -31,11 +32,35 @@ export class ConsoleComponent implements OnInit {
   }
 
   // Options File
-  openFile() {
-    
+  handleFileChange(event: any) {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      // Aquí puedes hacer lo que quieras con el archivo seleccionado, por ejemplo, guardar o procesar.
+      console.log('Archivo seleccionado:', selectedFile);
+    }
   }
 
+  openFileExplorer(inputFile: HTMLInputElement) {
+    inputFile.click();
+  }
 
+  openFile(event: any) {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const filePath = event.target.value;
+      const fileName = filePath.split('\\').pop() || filePath.split('/').pop();
+      const fileReader = new FileReader();
+      fileReader.onload = (e: any) => {
+        const fileContent = e.target.result;
+        this.tabs[this.currentTab].ruta = filePath;
+        this.tabs[this.currentTab].nombre = fileName;
+        this.tabs[this.currentTab].contenido_anterior = fileContent;
+        this.tabs[this.currentTab].contenido_actual = fileContent;
+        this.updatesLines_updateCosole();
+      };
+      fileReader.readAsText(selectedFile);
+    }
+  }
 
   // Option Run
   run() {
@@ -45,7 +70,7 @@ export class ConsoleComponent implements OnInit {
   // Tabs
   select_tab(i:number) {
     this.currentTab = i;
-    this.updateLinesInputConsole();
+    this.updatesLines_updateCosole();
   }
 
   add_tab() {
@@ -81,7 +106,7 @@ export class ConsoleComponent implements OnInit {
     } else {
       this.tabs[i] = new Tab("", "sin_titulo", "", "");
     }
-    this.updateLinesInputConsole();
+    this.updatesLines_updateCosole();
   }
 
   // Consoles
@@ -91,12 +116,18 @@ export class ConsoleComponent implements OnInit {
   }
 
   updateLinesInputConsole() {
-    //this.linesInputConsole = this.inputConsoleContent.split('\n');
     this.linesInputConsole = this.tabs[this.currentTab].contenido_actual.split('\n');
   }
 
   updateLinesOutputConsole() {
     this.linesOutputConsole = this.outputConsoleContent.split('\n');
+  }
+
+  updatesLines_updateCosole() {
+    this.updateLinesInputConsole();
+    this.inputConsole.nativeElement.value = this.tabs[this.currentTab].contenido_actual;
+    this.inputConsole.nativeElement.style.height = 'auto';
+    this.inputConsole.nativeElement.style.height = this.inputConsole.nativeElement.scrollHeight + 'px';
   }
 
 }
