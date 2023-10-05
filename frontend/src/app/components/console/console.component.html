@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 -->
-                <div><button class="btnOpcion border border-secondary border-left-0 px-4 py-1"><i class="fa-solid fa-play fa-xs"></i> Ejecutar</button></div>
+                <div><button class="btnOpcion border border-secondary border-left-0 px-4 py-1" (click)="run()"><i class="fa-solid fa-play fa-xs"></i> Ejecutar</button></div>
                 <div class="dropdown">
                     <button class="btnOpcion dropdown-toggle border border-secondary  border-left-0 px-4 py-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reporte</button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -37,13 +37,13 @@
                 <div class="col-6">
                     <div class="row">
                         <div class="col-1 py-3"></div>
-                        <div class="col-11 py-3">Entrada</div>
+                        <div class="col-11 py-3 px-0">Entrada</div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="row">
                         <div class="col-1 py-3"></div>
-                        <div class="col-11 py-3">Salida</div>
+                        <div class="col-11 py-3 px-2">Salida</div>
                     </div>
                 </div>
                 <div class="col-6">
@@ -67,29 +67,27 @@
                 </div>
                 <div class="col-6">
                     <div class="row">
-                        <div class="containerInputCode col-12 border border-secondary">
+                        <div class="containerConsole containerInputCode col-12 border border-secondary">
                             <div class="row">
                                 <div class="containerNumberLine col-1 py-2">
-                                    <ng-container *ngFor="let line of lines; let i = index">{{ i + 1 }}<br/></ng-container>
+                                    <ng-container *ngFor="let line of linesInputConsole; let i = index">{{ i + 1 }}<br/></ng-container>
                                 </div>
                                 <div class="col-11 p-0">
-                                    <!--<textarea #inputConsole class="" id="textarea1" rows="20" spellcheck="false" [(ngModel)]="editorContent" (input)="updateLines()" class="editor-textarea"></textarea>-->
-                                    <textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="inputConsoleContent" (input)="updateLines()"></textarea>
+                                    <textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="inputConsoleContent" (input)="updateLinesInputConsole()"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-6 pl-4">
                     <div class="row">
-                        <div class="containerInputCode col-12 border border-secondary">
+                        <div class="containerConsole containerOutputCode col-12 border border-secondary">
                             <div class="row">
                                 <div class="containerNumberLine col-1 py-2">
-                                    <ng-container *ngFor="let line of lines; let i = index">{{ i + 1 }}<br/></ng-container>
+                                    <ng-container *ngFor="let line of linesOutputConsole; let i = index">{{ i + 1 }}<br/></ng-container>
                                 </div>
                                 <div class="col-11 p-0">
-                                    <!--<textarea #inputConsole class="" id="textarea1" rows="20" spellcheck="false" [(ngModel)]="editorContent" (input)="updateLines()" class="editor-textarea"></textarea>-->
-                                    <textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="inputConsoleContent" (input)="updateLines()"></textarea>
+                                    <textarea #outputConsole class="p-2" id="textarea2" rows="20" spellcheck="false" (input)="autoExpand(outputConsole)" [(ngModel)]="outputConsoleContent" (input)="updateLinesOutputConsole()"></textarea>
                                 </div>
                             </div>
                         </div>

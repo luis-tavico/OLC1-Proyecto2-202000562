@@ -54,24 +54,25 @@
 }
 
 /* Contenedo de consola */
-.containerInputCode {
+.containerConsole {
     height: 505px;
     overflow: auto;
     background-color: #343a40;
 }
 
-.containerInputCode::-webkit-scrollbar {
+.containerConsole::-webkit-scrollbar {
     width: 8px;
 }
 
-.containerInputCode::-webkit-scrollbar-track {
+.containerConsole::-webkit-scrollbar-track {
     background-color: transparent; 
 }
 
-.containerInputCode::-webkit-scrollbar-thumb {
+.containerConsole::-webkit-scrollbar-thumb {
     border-radius: 25px;
     background-color: #99A3A4;
 }
+
 
 /* Consolas */
 textarea {
