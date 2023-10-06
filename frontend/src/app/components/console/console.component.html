@@ -71,7 +71,7 @@
                                     <ng-container *ngFor="let line of linesInputConsole; let i = index">{{ i + 1 }}<br/></ng-container>
                                 </div>
                                 <div class="col-11 p-0">
-                                    <textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="tabs[currentTab].contenido_actual" (input)="updateLinesInputConsole()"></textarea>
+                                    <textarea #inputConsole class="p-2" id="textarea1" rows="20" spellcheck="false" (input)="autoExpand(inputConsole)" [(ngModel)]="tabs[currentTab].contenido_actual" (input)="updateLinesInputConsole()" (keydown)="onKeyPress($event)"></textarea>
                                 </div>
                             </div>
                         </div>

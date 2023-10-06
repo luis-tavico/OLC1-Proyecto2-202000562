@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, HostListener  } from '@angular/core';
 import { Tab } from 'src/app/models/Tab';
 
 @Component({
@@ -31,11 +31,22 @@ export class ConsoleComponent implements OnInit {
     this.updateLinesOutputConsole();
   }
 
+  onKeyPress(event: KeyboardEvent) {
+    const teclaPresionada = event.key;
+    if (teclaPresionada === 'Tab') {
+      event.preventDefault();
+      //this.inputConsole.nativeElement.setSelectionRange(start+1, start+1);
+      const i = this.inputConsole.nativeElement.selectionStart;
+      const principio = this.tabs[this.currentTab].contenido_actual.slice(0, i);
+      const final = this.tabs[this.currentTab].contenido_actual.slice(i);
+      this.tabs[this.currentTab].contenido_actual = principio+"\t"+final;
+    }
+  }
+
   // Options File
   handleFileChange(event: any) {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      // Aquí puedes hacer lo que quieras con el archivo seleccionado, por ejemplo, guardar o procesar.
       console.log('Archivo seleccionado:', selectedFile);
     }
   }
