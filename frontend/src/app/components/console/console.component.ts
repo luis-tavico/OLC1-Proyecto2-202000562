@@ -1,5 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener  } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Tab } from 'src/app/models/Tab';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-console',
@@ -31,26 +32,7 @@ export class ConsoleComponent implements OnInit {
     this.updateLinesOutputConsole();
   }
 
-  onKeyPress(event: KeyboardEvent) {
-    const teclaPresionada = event.key;
-    if (teclaPresionada === 'Tab') {
-      event.preventDefault();
-      //this.inputConsole.nativeElement.setSelectionRange(start+1, start+1);
-      const i = this.inputConsole.nativeElement.selectionStart;
-      const principio = this.tabs[this.currentTab].contenido_actual.slice(0, i);
-      const final = this.tabs[this.currentTab].contenido_actual.slice(i);
-      this.tabs[this.currentTab].contenido_actual = principio+"\t"+final;
-    }
-  }
-
-  // Options File
-  handleFileChange(event: any) {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      console.log('Archivo seleccionado:', selectedFile);
-    }
-  }
-
+  // Option Open
   openFileExplorer(inputFile: HTMLInputElement) {
     inputFile.click();
   }
@@ -73,6 +55,33 @@ export class ConsoleComponent implements OnInit {
     }
   }
 
+  // Option Save
+  async save() {  
+    await Swal.fire({
+      title: 'Nombre Archivo',
+      input: 'text',
+      inputValue: this.tabs[this.currentTab].nombre + '.qc',
+      inputAttributes: { spellcheck: 'false' },
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      inputValidator: (value) => {
+        if (!value) {
+          return '¡Complete el campo vacio!';
+        } else {
+          return null;
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const nombreIngresado = result.value;
+        this.tabs[this.currentTab].nombre = nombreIngresado;
+        this.tabs[this.currentTab].contenido_anterior = this.tabs[this.currentTab].contenido_actual;
+        Swal.fire('Archivo guardado exitosamente.', `Archivo guardado en C:\\Users\\Luis T\\Documents\\QueryCrypterApp\\${nombreIngresado}`, 'success');
+      }
+    });
+  }
+
   // Option Run
   run() {
     alert(this.tabs[this.currentTab].contenido_actual);
@@ -90,34 +99,43 @@ export class ConsoleComponent implements OnInit {
       this.currentTab = this.tabs.length - 1;
       this.updateLinesInputConsole();
     } else {
-      alert("Ha llegado al límite de pestañas.");
+      Swal.fire('Oops...', 'Ha llegado al límite de pestañas.', 'error')
     }
   }
   
-  delete_tab(i:number) {
+  async delete_tab(i:number) {
+    var respuesta: Boolean = true;
     if (this.tabs[i].contenido_anterior != this.tabs[i].contenido_actual) {
-      if (this.tabs[i].nombre == "sin_titulo") {
-        alert("¿Desea guardar el archivo?");
-      } else {
-        alert("¿Desea guardar los cambio en el archivo " + this.tabs[i].nombre + "?");
+      const { isConfirmed } = await Swal.fire({
+        title: 'Advertencia',
+        text: 'Los cambios no guardados se perderán. ¿Desea continuar?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+      });
+      if (!isConfirmed) {
+        respuesta = false;
       }
     }
-    if (this.tabs.length > 1) {
-      if (this.currentTab == i) {
-        if (i != 0) {
-          this.currentTab = i-1;
+    if (respuesta) {
+      if (this.tabs.length > 1) {
+        if (this.currentTab == i) {
+          if (i != 0) {
+            this.currentTab = i-1;
+          }
+          this.tabs.splice(i, 1);
+        } else {
+          if (this.currentTab > i) {
+            this.currentTab = this.currentTab-1;
+          }
+          this.tabs.splice(i, 1);
         }
-        this.tabs.splice(i, 1);
       } else {
-        if (this.currentTab > i) {
-          this.currentTab = this.currentTab-1;
-        }
-        this.tabs.splice(i, 1);
+        this.tabs[i] = new Tab("", "sin_titulo", "", "");
       }
-    } else {
-      this.tabs[i] = new Tab("", "sin_titulo", "", "");
+      this.updatesLines_updateCosole();
     }
-    this.updatesLines_updateCosole();
   }
 
   // Consoles
@@ -139,6 +157,18 @@ export class ConsoleComponent implements OnInit {
     this.inputConsole.nativeElement.value = this.tabs[this.currentTab].contenido_actual;
     this.inputConsole.nativeElement.style.height = 'auto';
     this.inputConsole.nativeElement.style.height = this.inputConsole.nativeElement.scrollHeight + 'px';
+  }
+
+  onKeyPress(event: KeyboardEvent) {
+    const teclaPresionada = event.key;
+    if (teclaPresionada === 'Tab') {
+      event.preventDefault();
+      //this.inputConsole.nativeElement.setSelectionRange(start+1, start+1);
+      const i = this.inputConsole.nativeElement.selectionStart;
+      const principio = this.tabs[this.currentTab].contenido_actual.slice(0, i);
+      const final = this.tabs[this.currentTab].contenido_actual.slice(i);
+      this.tabs[this.currentTab].contenido_actual = principio+"\t"+final;
+    }
   }
 
 }
