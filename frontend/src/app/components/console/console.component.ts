@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Tab } from 'src/app/models/Tab';
 import Swal from 'sweetalert2';
+import { ConsoleService } from 'src/app/services/console.service';
 
 @Component({
   selector: 'app-console',
@@ -24,7 +25,7 @@ export class ConsoleComponent implements OnInit {
   linesOutputConsole: string[] = [];
   //[ruta, nombre, contenido_anterior, contenido_actual]
   
-  constructor() { }
+  constructor(private service: ConsoleService) { }
 
   ngOnInit(): void {
     this.tabs.push(new Tab("", "sin_titulo", "", ""));
@@ -49,7 +50,7 @@ export class ConsoleComponent implements OnInit {
         this.tabs[this.currentTab].nombre = fileName;
         this.tabs[this.currentTab].contenido_anterior = fileContent;
         this.tabs[this.currentTab].contenido_actual = fileContent;
-        this.updatesLines_updateCosole();
+        this.updatesLines_updateConsole();
       };
       fileReader.readAsText(selectedFile);
     }
@@ -84,13 +85,55 @@ export class ConsoleComponent implements OnInit {
 
   // Option Run
   run() {
-    alert(this.tabs[this.currentTab].contenido_actual);
+    var code = this.tabs[this.currentTab].contenido_actual
+    const postData = { "code": code };
+    
+    this.service.postCode(postData).subscribe(
+      (response) => {
+        var r = response as any;
+        console.log(r.console);
+        if (r.errors.length == 0) {
+          this.linesOutputConsole = r.console.split('\n');
+          this.outputConsole.nativeElement.value = r.console;
+          this.outputConsoleContent = r.console;
+          this.outputConsole.nativeElement.style.height = 'auto';
+          this.outputConsole.nativeElement.style.height = this.outputConsole.nativeElement.scrollHeight + 'px';
+        } else {
+          let e: string = "";
+          for (let i = 0; i < r.errors.length; i++) {
+            if (i == 0) {
+              if (r.errors[i].type == "Lexico") {
+                e += "Error lexico en "+r.errors[i].error+", linea "+r.errors[i].line+", columna "+r.errors[i].column+".";
+              } else if (r.errors[i].type == "Sintactico") {
+                e += "Error sintactico en "+r.errors[i].error+", linea "+r.errors[i].line+", columna "+r.errors[i].column+".";
+              }
+            } else {
+              if (r.errors[i].type == "Lexico") {
+                e += "\nError lexico en "+r.errors[i].error+", linea "+r.errors[i].line+", columna "+r.errors[i].column+".";
+              } else if (r.errors[i].type == "Sintactico") {
+                e += "\nError sintactico en "+r.errors[i].error+", linea "+r.errors[i].line+", columna "+r.errors[i].column+".";
+              }
+            }
+          }
+          this.linesOutputConsole = e.split('\n');
+          this.outputConsole.nativeElement.value = e;
+          this.outputConsoleContent = e;
+          this.outputConsole.nativeElement.style.height = 'auto';
+          this.outputConsole.nativeElement.style.height = this.outputConsole.nativeElement.scrollHeight + 'px';
+        }
+
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+    
   }
 
   // Tabs
   select_tab(i:number) {
     this.currentTab = i;
-    this.updatesLines_updateCosole();
+    this.updatesLines_updateConsole();
   }
 
   add_tab() {
@@ -134,7 +177,7 @@ export class ConsoleComponent implements OnInit {
       } else {
         this.tabs[i] = new Tab("", "sin_titulo", "", "");
       }
-      this.updatesLines_updateCosole();
+      this.updatesLines_updateConsole();
     }
   }
 
@@ -152,7 +195,7 @@ export class ConsoleComponent implements OnInit {
     this.linesOutputConsole = this.outputConsoleContent.split('\n');
   }
 
-  updatesLines_updateCosole() {
+  updatesLines_updateConsole() {
     this.updateLinesInputConsole();
     this.inputConsole.nativeElement.value = this.tabs[this.currentTab].contenido_actual;
     this.inputConsole.nativeElement.style.height = 'auto';

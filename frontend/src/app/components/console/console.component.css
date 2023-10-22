@@ -87,7 +87,7 @@ textarea {
     overflow-y: hidden;
     overflow-x: auto;
     font-family: monospace;
-    white-space: nowrap;
+    white-space: pre;
 }
 
 textarea:focus {
