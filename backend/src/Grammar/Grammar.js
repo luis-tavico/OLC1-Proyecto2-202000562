@@ -981,7 +981,7 @@ case 57: tokens.push({token:"TK_INTEGER", value: yy_.yytext, line: line, column:
 break;
 case 58: tokens.push({token:"TK_ID", value: yy_.yytext, line: line, column: yy_.yylloc.first_column+1}); return 21; 
 break;
-case 59: text = ""; this.begin("string"); tokens.push({token:"TK_TEXT", value: yy_.yytext, line: line, column: yy_.yylloc.first_column+1});
+case 59: text = ""; this.begin("string"); 
 break;
 case 60: text += yy_.yytext; 
 break;
@@ -999,7 +999,7 @@ case 66: text += "\'";
 break;
 case 67: text += "\r";   
 break;
-case 68: yy_.yytext = text; this.popState(); return 86; 
+case 68: yy_.yytext = text; this.popState(); tokens.push({token:"TK_TEXT", value: "\""+yy_.yytext+"\"", line: line, column: yy_.yylloc.first_column+1}); return 86; 
 break;
 case 69: tokens.push({token:"TK_PLUS", value: yy_.yytext, line: line, column: yy_.yylloc.first_column+1}); return 66; 
 break;

@@ -114,7 +114,7 @@ app.post('/analizar', (req: Request, res: Response) => {
                 console.log('OCURRIO UN ERROR EN RECONOCER INSTRUCCIONES: ', error);
             }
         }
-        res.status(200).send({ console: singleton.getConsole(), errors: [], tokens: result.tokens})
+        res.status(200).send({ console: singleton.getConsole(), symbols: result.symbols, tokens: result.tokens, errors: result.errors})
     } catch (error) {
         console.log(error);
     }    

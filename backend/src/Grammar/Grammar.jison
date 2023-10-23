@@ -90,7 +90,7 @@
 [0-9]+"."[0-9]+\b                       { tokens.push({token:"TK_DECIMAL", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DECIMAL'; }
 [0-9]+\b                                { tokens.push({token:"TK_INTEGER", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_INTEGER'; }
 ([a-zA-Z])([a-zA-Z0-9_])*               { tokens.push({token:"TK_ID", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_ID'; }
-["]			                            { text = ""; this.begin("string"); tokens.push({token:"TK_TEXT", value: yytext, line: line, column: yylloc.first_column+1});}
+["]			                            { text = ""; this.begin("string"); }
 <string>[^"\\]+                         { text += yytext; }
 <string>"\\\""                          { text += "\"";   }
 <string>"\\n"                           { text += "\n";   }
@@ -99,7 +99,7 @@
 <string>"\\\\"                          { text += "\\";   }
 <string>"\\\'"                          { text += "\'";   }
 <string>"\\r"                           { text += "\r";   }
-<string>["]                             { yytext = text; this.popState(); return 'TK_TEXT'; }
+<string>["]                             { yytext = text; this.popState(); tokens.push({token:"TK_TEXT", value: "\""+yytext+"\"", line: line, column: yylloc.first_column+1}); return 'TK_TEXT'; }
 /* Arithmetic Operators */
 "+"                                     { tokens.push({token:"TK_PLUS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_PLUS'; }
 "-"                                     { tokens.push({token:"TK_MINUS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_MINUS'; }
@@ -157,7 +157,7 @@
 
 %%
 
-ini: instructions EOF { return {'ast':$1, 'tokens': tokens, 'errors':errors, 'symbols': symbols}; };
+ini: instructions EOF { return {'ast':$1, 'tokens': tokens, 'errors': errors, 'symbols': symbols}; };
 
 instructions: instructions instruction { $1.push($2); $$ = $1; }
             | instruction              { $$ = [$1]; };

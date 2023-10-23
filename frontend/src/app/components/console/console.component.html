@@ -7,16 +7,26 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
-                <table class="table table-dark">
+                <table class="table table-dark" *ngIf="report_name === 'Reporte de Errores'">
                     <thead>
-                        <!--
                         <tr>
                             <th>Tipo de Error</th>
                             <th>Descripcion</th>
                             <th>Linea</th>
                             <th>Columna</th>
                         </tr>
-                        -->
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let error of errors">
+                            <td>{{ error.type }}</td>
+                            <td>{{ error.message }}</td>
+                            <td>{{ error.line }}</td>
+                            <td>{{ error.column }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-dark" *ngIf="report_name === 'Reporte de Tokens'">
+                    <thead>
                         <tr>
                             <th>Token</th>
                             <th>Valor</th>
@@ -25,19 +35,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!--
-                        <tr *ngFor="let error of errors">
-                            <td>{{ error.type }}</td>
-                            <td>{{ error.message }}</td>
-                            <td>{{ error.line }}</td>
-                            <td>{{ error.column }}</td>
+                        <tr *ngFor="let token of tokens">
+                            <td>{{ token.token }}</td>
+                            <td>{{ token.value }}</td>
+                            <td>{{ token.line }}</td>
+                            <td>{{ token.column }}</td>
                         </tr>
-                        -->
-                        <tr *ngFor="let item of items">
-                            <td>{{ item.token }}</td>
-                            <td>{{ item.value }}</td>
-                            <td>{{ item.line }}</td>
-                            <td>{{ item.column }}</td>
+                    </tbody>
+                </table>
+                <table class="table table-dark" *ngIf="report_name === 'Reporte de Simbolos'">
+                    <thead>
+                        <tr>
+                            <th>Identificador</th>
+                            <th>Tipo</th>
+                            <th>Tipo</th>
+                            <th>Linea</th>
+                            <th>Columna</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let symbol of symbols">
+                            <td>{{ symbol.symbol }}</td>
+                            <td>{{ symbol.type }}</td>
+                            <td>{{ symbol.datatype }}</td>
+                            <td>{{ symbol.line }}</td>
+                            <td>{{ symbol.column }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -68,7 +90,7 @@
                     <ul class="dropdown-menu">
                         <li><button class="dropdown-item text-white" type="button" data-toggle="modal" data-target="#modal" (click)="getTokensReport()">Tokens</button></li>
                         <li><button class="dropdown-item text-white" type="button" data-toggle="modal" data-target="#modal" (click)="getErrorsReport()">Errores</button></li>
-                        <li><button class="dropdown-item text-white" type="button">Tabla de Simbolos</button></li>
+                        <li><button class="dropdown-item text-white" type="button" data-toggle="modal" data-target="#modal" (click)="getSymbolsReport()">Tabla de Simbolos</button></li>
                         <li><button class="dropdown-item text-white" type="button">Arbol de Analisis</button></li>
                     </ul>
                 </div>         

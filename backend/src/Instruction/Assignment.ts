@@ -41,5 +41,4 @@ export class Assignment extends Instruction {
         } else if (search_variable.type == 4) { this.symbols.push({symbol: this.id, type:"variable", datatype: 'BOOLEAN', line: this.line, column: this.column}); 
         } else if (search_variable.type == 5) { this.symbols.push({symbol: this.id, type:"variable", datatype: 'NULL', line: this.line, column: this.column}); }
         }
-
 }
