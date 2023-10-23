@@ -13,16 +13,18 @@ export class Statement extends Instruction {
     private name: string;
     private value: Expression;
     */
+    public symbols :any[] = [];
+
 
     //constructor(line: number, column: number, name: string, type: number, value: Expression) {
-    constructor(line: number, column: number, private variables: any[]) {
+    constructor(line: number, column: number, private variables: any[], symbols = []) {
         super(line, column);
-        
         /*
         this.type = type;
         this.name = name;
         this.value = value;
         */
+       this.symbols = symbols;
     }
 
     public execute(environment: Environment) {
@@ -40,7 +42,12 @@ export class Statement extends Instruction {
             } else {
                 errors.push(new Error(this.line, this.column, 'Semantico', `Declaracion: El tipo '${Type[val.type]}' no se puede asignar al tipo '${Type[variable.type]}'`));
             }
-
+            if (variable.type == 0){ this.symbols.push({symbol: variable.name, type:"variable", datatype: 'INT', line: this.line, column: this.column});
+            } else if (variable.type == 1) { this.symbols.push({symbol: variable.name, type:"variable", datatype: 'DOUBLE', line: this.line, column: this.column});
+            } else if (variable.type == 2) { this.symbols.push({symbol: variable.name, type:"variable", datatype: 'DATE', line: this.line, column: this.column}); 
+            } else if (variable.type == 3) { this.symbols.push({symbol: variable.name, type:"variable", datatype: 'VARCHAR', line: this.line, column: this.column}); 
+            } else if (variable.type == 4) { this.symbols.push({symbol: variable.name, type:"variable", datatype: 'BOOLEAN', line: this.line, column: this.column}); 
+            } else if (variable.type == 5) { this.symbols.push({symbol: variable.name, type:"variable", datatype: 'NULL', line: this.line, column: this.column}); }
         }
 
         /*

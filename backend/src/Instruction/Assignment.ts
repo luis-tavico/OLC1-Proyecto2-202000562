@@ -6,8 +6,12 @@ import { Environment } from '../Symbol/Environment';
 import { Type } from '../Symbol/Type';
 
 export class Assignment extends Instruction {
-    constructor(line: number, column: number, private id: string, private value: Expression) {
-        super(line, column)        
+
+    public symbols :any[] = [];
+
+    constructor(line: number, column: number, private id: string, private value: Expression,  symbols = []) {
+        super(line, column)    
+        this.symbols = symbols;    
     }
 
     public getId() {
@@ -30,6 +34,12 @@ export class Assignment extends Instruction {
         } else {
             errors.push(new Error(this.line, this.column, 'Semantico', `Asignacion: No se encuentra declarada la variable '${this.id}'`))
         }
-    }
+        if (search_variable.type == 0){ this.symbols.push({symbol: this.id, type:"variable", datatype: 'INT', line: this.line, column: this.column});
+        } else if (search_variable.type == 1) { this.symbols.push({symbol: this.id, type:"variable", datatype: 'DOUBLE', line: this.line, column: this.column});
+        } else if (search_variable.type == 2) { this.symbols.push({symbol: this.id, type:"variable", datatype: 'DATE', line: this.line, column: this.column}); 
+        } else if (search_variable.type == 3) { this.symbols.push({symbol: this.id, type:"variable", datatype: 'VARCHAR', line: this.line, column: this.column}); 
+        } else if (search_variable.type == 4) { this.symbols.push({symbol: this.id, type:"variable", datatype: 'BOOLEAN', line: this.line, column: this.column}); 
+        } else if (search_variable.type == 5) { this.symbols.push({symbol: this.id, type:"variable", datatype: 'NULL', line: this.line, column: this.column}); }
+        }
 
 }

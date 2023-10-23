@@ -1,4 +1,5 @@
 %{
+    var line = 1;
     var text = "";
     var errors = [];
     var tokens = [];
@@ -7,114 +8,108 @@
 %lex
 
 %options case-insensitive
-%x string
+%x string 
 
 %%
 
-\n                      		        {  }
-[ \r\t]+                		        {  }
+\n                                      { line++; }
+[ \r\t]+                                {  }
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]     {  }
 "--".*                                  {  }
 
 /* Control Statements */
-"begin"    				                return 'TK_BEGIN';
-"end"    				                return 'TK_END';
-"as"    				                return 'TK_AS';
-"continue"    			                return 'TK_CONTINUE';
-"return"                                return 'TK_RETURN';
+"begin"                                 { tokens.push({token:"TK_BEGIN", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_BEGIN'; }
+"end"                                   { tokens.push({token:"TK_END", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_END'; }
+"as"                                    { tokens.push({token:"TK_AS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_AS'; }
 /* Table */
-"create"                                return 'TK_CREATE';
-"alter"                                 return 'TK_ALTER';
-"drop"                                  return 'TK_DROP';
-"table"                                 return 'TK_TABLE';
+"create"                                { tokens.push({token:"TK_CREATE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_CREATE'; }
+"alter"                                 { tokens.push({token:"TK_ALTER", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_ALTER'; }
+"drop"                                  { tokens.push({token:"TK_DROP", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DROP'; }
+"table"                                 { tokens.push({token:"TK_TABLE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_TABLE'; }
 /* Actions Table */
-"add"                                   return 'TK_ADD';
-"rename"                                return 'TK_RENAME';
-"column"                                return 'TK_COLUMN';
-/* Functions */
-"function"                              return 'TK_FUNCTION';
-/* Methods */
-"procedure"                             return 'TK_PROCEDURE';
+"add"                                   { tokens.push({token:"TK_ADD", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_ADD'; }
+"rename"                                { tokens.push({token:"TK_RENAME", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_RENAME'; }
+"column"                                { tokens.push({token:"TK_COLUMN", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_COLUMN'; }
 /* Native Functions */
-"print"                                 return 'TK_PRINT';
-"lower"                                 return 'TK_LOWER';
-"upper"                                 return 'TK_UPPER';
-"round"                                 return 'TK_ROUND';
-"len"                                   return 'TK_LEN';
-"typeof"                                return 'TK_TYPEOF';
+"print"                                 { tokens.push({token:"TK_PRINT", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_PRINT'; }
+"lower"                                 { tokens.push({token:"TK_LOWER", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_LOWER'; }
+"upper"                                 { tokens.push({token:"TK_UPPER", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_UPPER'; }
+"round"                                 { tokens.push({token:"TK_ROUND", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_ROUND'; }
+"len"                                   { tokens.push({token:"TK_LEN", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_LEN'; }
+"typeof"                                { tokens.push({token:"TK_TYPEOF", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_TYPEOF'; }
 /* Insert */
-"insert"                                return 'TK_INSERT';
+"insert"                                { tokens.push({token:"TK_INSERT", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_INSERT'; }
 /* Select */
-"select"                                return 'TK_SELECT';
+"select"                                { tokens.push({token:"TK_SELECT", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_SELECT'; }
 /* Update */
-"update"                                return 'TK_UPDATE';
+"update"                                { tokens.push({token:"TK_UPDATE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_UPDATE'; }
 /* truncate */
-"truncate"                              return 'TK_TRUNCATE';
+"truncate"                              { tokens.push({token:"TK_TRUNCATE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_TRUNCATE'; }
 /* delete */
-"delete"                                return 'TK_DELETE';
+"delete"                                { tokens.push({token:"TK_DELETE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DELETE'; }
 /* Conditions */
-"from"                                  return 'TK_FROM';
-"to"                                    return 'TK_TO';
-"where"                                 return 'TK_WHERE';
+"from"                                  { tokens.push({token:"TK_FROM", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_FROM'; }
+"to"                                    { tokens.push({token:"TK_TO", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_TO'; }
+"where"                                 { tokens.push({token:"TK_WHERE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_WHERE'; }
 /* assignation */
-"declare"                               return 'TK_DECLARE';
-"into"                                  return 'TK_INTO';
-"values"                                return 'TK_VALUES';
-"set"                                   return 'TK_SET';
+"declare"                               { tokens.push({token:"TK_DECLARE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DECLARE'; }
+"into"                                  { tokens.push({token:"TK_INTO", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_INTO'; }
+"values"                                { tokens.push({token:"TK_VALUES", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_VALUES'; }
+"set"                                   { tokens.push({token:"TK_SET", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_SET'; }
 /* Type of Data */
-"date"                                  return 'TK_DATE';
-"int"    		                        return 'TK_INT';
-"double"    	        	            return 'TK_DOUBLE';
-"varchar"    			                return 'TK_VARCHAR';
-"boolean"    			                return 'TK_BOOLEAN';
-"null"                                  return 'TK_NULL';
-"default"                               return 'TK_DEFAULT';
+"date"                                  { tokens.push({token:"TK_DATE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DATE'; }
+"int"                                   { tokens.push({token:"TK_INT", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_INT'; }
+"double"                                { tokens.push({token:"TK_DOUBLE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DOUBLE'; }
+"varchar"                               { tokens.push({token:"TK_VARCHAR", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_VARCHAR'; }
+"boolean"                               { tokens.push({token:"TK_BOOLEAN", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_BOOLEAN'; }
+"null"                                  { tokens.push({token:"TK_NULL", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_NULL'; }
+"default"                               { tokens.push({token:"TK_DEFAULT", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DEFAULT'; }
 /* boolean values */
-"true"                                  return 'TK_TRUE';
-"false"                                 return 'TK_FALSE';
+"true"                                  { tokens.push({token:"TK_TRUE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_TRUE'; }
+"false"                                 { tokens.push({token:"TK_FALSE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_FALSE'; }
 /* Logical Operators */
-"and"     			                    return 'TK_AND';
-"or"    			                    return 'TK_OR';
-"not"      			                    return 'TK_NOT';
+"and"                                   { tokens.push({token:"TK_AND", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_AND'; }
+"or"                                    { tokens.push({token:"TK_OR", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_OR'; }
+"not"                                   { tokens.push({token:"TK_NOT", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_NOT'; }
 /* Relational Operators */
-"<="             		                return 'TK_LESS_EQUAL';
-">="             		                return 'TK_GREATER_EQUAL';
-"!="              		                return 'TK_NOT_EQUAL';
-"="        			                    return 'TK_EQUAL';
-"<"            			                return 'TK_LESS_THAN';
-">"            			                return 'TK_GREATER_THAN';
+"<="                                    { tokens.push({token:"TK_LESS_EQUAL", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_LESS_EQUAL'; }
+">="                                    { tokens.push({token:"TK_GREATER_EQUAL", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_GREATER_EQUAL'; }
+"!="                                    { tokens.push({token:"TK_NOT_EQUAL", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_NOT_EQUAL'; }
+"="                                     { tokens.push({token:"TK_EQUAL", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_EQUAL'; }
+"<"                                     { tokens.push({token:"TK_LESS_THAN", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_LESS_THAN'; }
+">"                                     { tokens.push({token:"TK_GREATER_THAN", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_GREATER_THAN'; }
 /* Grouping Signs*/
-"("                                     return 'TK_LEFT_PARENTHESIS';
-")"                                     return 'TK_RIGHT_PARENTHESIS';
+"("                                     { tokens.push({token:"TK_LEFT_PARENTHESIS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_LEFT_PARENTHESIS'; }
+")"                                     { tokens.push({token:"TK_RIGHT_PARENTHESIS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_RIGHT_PARENTHESIS'; }
 /* Others */
-";"             		                return 'TK_SEMI_COLON';
-"@"                                     return 'TK_AT';
-","       			                    return 'TK_COMMA';
+";"                                     { tokens.push({token:"TK_SEMI_COLON", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_SEMI_COLON'; }
+"@"                                     { tokens.push({token:"TK_AT", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_AT'; }
+","                                     { tokens.push({token:"TK_COMMA", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_COMMA'; }
 /* Data */
-(\d{4})"-"(\d{1,2})"-"(\d{1,2})         return 'TK_TIME';
-[0-9]+"."[0-9]+\b                       return 'TK_DECIMAL';
-[0-9]+\b                                return 'TK_INTEGER';
-([a-zA-Z])([a-zA-Z0-9_])*               return 'TK_ID';
-["]			                            { text = ""; this.begin("string"); }
-<string>[^"\\]+			                { text += yytext; }
-<string>"\\\""			                { text += "\""; }
-<string>"\\n"			                { text += "\n"; }
-<string>\s			                    { text += " "; }
-<string>"\\t"			                { text += "\t"; }
-<string>"\\\\"			                { text += "\\"; }
-<string>"\\\'"			                { text += "\'"; }
-<string>"\\r"			                { text += "\r"; }
-<string>["]			                    { yytext = text; this.popState(); return 'TK_TEXT'; }
+(\d{4})"-"(\d{1,2})"-"(\d{1,2})         { tokens.push({token:"TK_TIME", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_TIME'; }
+[0-9]+"."[0-9]+\b                       { tokens.push({token:"TK_DECIMAL", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DECIMAL'; }
+[0-9]+\b                                { tokens.push({token:"TK_INTEGER", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_INTEGER'; }
+([a-zA-Z])([a-zA-Z0-9_])*               { tokens.push({token:"TK_ID", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_ID'; }
+["]			                            { text = ""; this.begin("string"); tokens.push({token:"TK_TEXT", value: yytext, line: line, column: yylloc.first_column+1});}
+<string>[^"\\]+                         { text += yytext; }
+<string>"\\\""                          { text += "\"";   }
+<string>"\\n"                           { text += "\n";   }
+<string>\s                              { text += " ";    }
+<string>"\\t"                           { text += "\t";   }
+<string>"\\\\"                          { text += "\\";   }
+<string>"\\\'"                          { text += "\'";   }
+<string>"\\r"                           { text += "\r";   }
+<string>["]                             { yytext = text; this.popState(); return 'TK_TEXT'; }
 /* Arithmetic Operators */
-"+"      			                    return 'TK_PLUS';
-"-"        			                    return 'TK_MINUS';
-"*"               		                return 'TK_TIMES';
-"/"           			                return 'TK_DIVIDE';
-"%"                                     return 'TK_MODULUS';
+"+"                                     { tokens.push({token:"TK_PLUS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_PLUS'; }
+"-"                                     { tokens.push({token:"TK_MINUS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_MINUS'; }
+"*"                                     { tokens.push({token:"TK_TIMES", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_TIMES'; }
+"/"                                     { tokens.push({token:"TK_DIVIDE", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_DIVIDE'; }
+"%"                                     { tokens.push({token:"TK_MODULUS", value: yytext, line: line, column: yylloc.first_column+1}); return 'TK_MODULUS'; }
 
 <<EOF>>                                 return 'EOF';
 
-.                                       { errors.push({type:"Lexico", error:yytext, line:yylloc.first_line, column:yylloc.first_column}); };
+.                                       { errors.push({type:"Lexico", error: yytext, line: line, column: yylloc.first_column+1, message: `Error lexico, token '${yytext}' no reconocido.`}); };
 /lex
 
 %{   
@@ -145,6 +140,9 @@
     const {Update} = require('../Instruction/Update');
     const {Truncate} = require('../Instruction/Truncate');
     const {Delete} = require('../Instruction/Delete');
+    //Symbols
+    var symbols = [];
+
 %}
 
 %left 'TK_OR'
@@ -159,7 +157,7 @@
 
 %%
 
-ini: instructions EOF { return $1; };
+ini: instructions EOF { return {'ast':$1, 'tokens': tokens, 'errors':errors, 'symbols': symbols}; };
 
 instructions: instructions instruction { $1.push($2); $$ = $1; }
             | instruction              { $$ = [$1]; };
@@ -170,11 +168,12 @@ instruction: block      { $$ = $1; }
            | print      { $$ = $1; }
            | ddl        { $$ = $1; }
            | dml        { $$ = $1; }
-           | error      { console.log({ line: this._$.first_line, column: this._$.first_column, type: 'Sintáctico', message: `Error sintáctico, token no esperado '${yytext}' .`}); };
+           | error      { errors.push({type: "Sintactico", error: yytext, line: this._$.first_line, column: this._$.first_column+1, message: `Error sintactico, token '${yytext}' no esperado.`}); };
+
 
 block: TK_BEGIN instructions TK_END TK_SEMI_COLON { $$ = new Block(@1.first_line, @1.first_column, $2); };
 
-statement: TK_DECLARE variables TK_SEMI_COLON { $$ = new Statement(@1.first_line, @1.first_column, $2); };
+statement: TK_DECLARE variables TK_SEMI_COLON { $$ = new Statement(@1.first_line, @1.first_column, $2, symbols); };
 
 variables: variables TK_COMMA variable { $1.push($3); $$ = $1; }
          | variable                    { $$ = [$1]; };
@@ -182,7 +181,7 @@ variables: variables TK_COMMA variable { $1.push($3); $$ = $1; }
 variable: TK_AT TK_ID type                       { $$ = {'line': @1.first_line, 'column': @1.first_column, 'name': $2, 'type': $3, 'value': undefined }; }
         | TK_AT TK_ID type TK_DEFAULT expression { $$ = {'line': @1.first_line, 'column': @1.first_column, 'name': $2, 'type': $3, 'value': $5 }; };
 
-assignment: TK_SET TK_AT TK_ID TK_EQUAL expression TK_SEMI_COLON { $$ = new Assignment(@1.first_line, @1.first_column, $3, $5); }; 
+assignment: TK_SET TK_AT TK_ID TK_EQUAL expression TK_SEMI_COLON { $$ = new Assignment(@1.first_line, @1.first_column, $3, $5, symbols); }; 
 
 print: TK_PRINT expression TK_SEMI_COLON { $$ = new Print(@1.first_line, @1.first_column, $2); };
 

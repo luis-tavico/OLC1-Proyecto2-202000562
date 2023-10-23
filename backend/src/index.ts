@@ -103,9 +103,9 @@ app.post('/analizar', (req: Request, res: Response) => {
     try {
         const singleton = Singleton.getInstance()
         singleton.cleanErrors()
-        const ast = parser.parse(code.toString());
+        const result = parser.parse(code.toString());
         const env = new Environment(null);
-        for (const instr of ast) {
+        for (const instr of result.ast) {
             if (instr instanceof Function)
                 continue;
             try {
@@ -114,7 +114,7 @@ app.post('/analizar', (req: Request, res: Response) => {
                 console.log('OCURRIO UN ERROR EN RECONOCER INSTRUCCIONES: ', error);
             }
         }
-        res.status(200).send({ console: singleton.getConsole(), errors: []})
+        res.status(200).send({ console: singleton.getConsole(), errors: [], tokens: result.tokens})
     } catch (error) {
         console.log(error);
     }    

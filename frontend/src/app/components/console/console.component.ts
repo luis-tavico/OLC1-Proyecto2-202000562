@@ -14,6 +14,8 @@ export class ConsoleComponent implements OnInit {
   @ViewChild('inputConsole') inputConsole!: ElementRef;
   @ViewChild('outputConsole') outputConsole!: ElementRef;
 
+  //Titulo Reporte
+  report_name: string = "";
   //Pestañas
   tabs: Tab[] = [];
   currentTab: number = 0;
@@ -24,6 +26,8 @@ export class ConsoleComponent implements OnInit {
   outputConsoleContent = '';
   linesOutputConsole: string[] = [];
   //[ruta, nombre, contenido_anterior, contenido_actual]
+  //Errores
+  items: any[] = [];
   
   constructor(private service: ConsoleService) { }
 
@@ -91,7 +95,8 @@ export class ConsoleComponent implements OnInit {
     this.service.postCode(postData).subscribe(
       (response) => {
         var r = response as any;
-        console.log(r.console);
+        console.log(r.tokens);
+        this.items = r.tokens; 
         if (r.errors.length == 0) {
           this.linesOutputConsole = r.console.split('\n');
           this.outputConsole.nativeElement.value = r.console;
@@ -128,6 +133,15 @@ export class ConsoleComponent implements OnInit {
       }
     );
     
+  }
+
+  // Option Reports
+  getErrorsReport() {
+    this.report_name = "Reporte de Errores";
+  }
+
+  getTokensReport() {
+    this.report_name = "Reporte de Tokens";
   }
 
   // Tabs
