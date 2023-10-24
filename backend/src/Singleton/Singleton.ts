@@ -16,7 +16,11 @@ export class Singleton {
     }
 
     public addConsole(data: string) {
-        this.consola += data
+        if (this.consola == "") {
+            this.consola += data
+        } else {
+            this.consola += "\n" + data
+        }
     }
     public getConsole(): string {
         return this.consola

@@ -20,18 +20,17 @@ export class ConsoleComponent implements OnInit {
   tabs: Tab[] = [];
   currentTab: number = 0;
   //Consola Input
-  //inputConsoleContent = '';
   linesInputConsole: string[] = [];
   //Consola Output
   outputConsoleContent = '';
   linesOutputConsole: string[] = [];
   //[ruta, nombre, contenido_anterior, contenido_actual]
-  //Errores
-  errors: any[] = [];
   //Tokens
   tokens: any[] = [];
   //Symbols
   symbols: any[] = [];
+  //Errores
+  errors: any[] = [];
 
 
   constructor(private service: ConsoleService) { }

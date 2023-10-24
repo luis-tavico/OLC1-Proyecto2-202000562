@@ -10,7 +10,7 @@ export class Update extends Instruction {
     }
 
     public execute(environment : Environment){
-        environment.update(this.name.toString().toLocaleLowerCase(), this.columns, this.condition)        
+        environment.update(this.name.toString(), this.columns, this.condition)        
     }
       
 }

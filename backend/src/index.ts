@@ -101,8 +101,9 @@ app.use(cors({
 app.post('/analizar', (req: Request, res: Response) => {
     const code = req.body.code
     try {
-        const singleton = Singleton.getInstance()
-        singleton.cleanErrors()
+        const singleton = Singleton.getInstance();
+        singleton.cleanErrors();
+        singleton.cleanConsole();
         const result = parser.parse(code.toString());
         const env = new Environment(null);
         for (const instr of result.ast) {

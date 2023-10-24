@@ -11,12 +11,12 @@ export class Select extends Instruction {
     public execute(environment : Environment){
         if (this.condition == null) {
             if (this.columns != null) {
-                environment.select(this.name.toString().toLocaleLowerCase(), this.columns, null)        
+                environment.select(this.name.toString(), this.columns, null)        
             } else {
-                environment.select(this.name.toString().toLocaleLowerCase(), null, null)
+                environment.select(this.name.toString(), null, null)
             }
         } else {
-            environment.select(this.name.toString().toLocaleLowerCase(), this.columns, this.condition)        
+            environment.select(this.name.toString(), this.columns, this.condition)        
         }
     }
       

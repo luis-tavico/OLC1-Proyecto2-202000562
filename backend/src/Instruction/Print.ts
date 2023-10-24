@@ -16,11 +16,7 @@ export class Print extends Instruction {
         const singleton = Singleton.getInstance()
 
         if (value.value !== null) {
-            if (singleton.getConsole() == "") {
-                singleton.addConsole(value.value);
-            } else {
-                singleton.addConsole("\n" + value.value);
-            }
+            singleton.addConsole(value.value);
         }
 
     }

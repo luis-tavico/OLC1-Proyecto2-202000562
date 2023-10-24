@@ -5,10 +5,13 @@ import { Return } from "../Abstract/Return";
 import { Relational } from "../Expression/Relational";
 import { Assignment } from "../Instruction/Assignment";
 import { Field } from "../Expression/Field";
+import { Singleton } from "../Singleton/Singleton";
 
 export class Environment {
     private variables = new Map<string, Symbol>();
     private tables = new Map<string, Table>();
+    singleton = Singleton.getInstance()
+
 
     constructor(public prev: Environment | null) {
         this.variables = new Map<string, Symbol>();
@@ -54,9 +57,9 @@ export class Environment {
         let env: Environment | null = this;
         if (!env.tables.has(name.toLowerCase())) {
             env.tables.set(name.toLowerCase(), table);
-            console.log("Se creo la tabla " + name + " en el entorno");
+            console.log("Tabla " + name + " creada exitosamente.");
         }else {
-            console.log("Error, La tabla " + name + " ya existe en el entorno");
+            console.log("Error, la tabla " + name + " ya existe.");
         }
     }
 
@@ -69,13 +72,12 @@ export class Environment {
             const table = contextGlobal.tables.get(name.toLowerCase())!;
             const cols = table.columns;
             const newTuple: { [key: string]: any } = {};
-            
             columns.forEach((new_column) => {
                 cols.push(new_column.execute(env));
+                console.log("Columna " + new_column.execute(env).value + " agregada a tabla " + name + " exitosamente.");
             });
-
         } else {
-            console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     }
 
@@ -88,7 +90,6 @@ export class Environment {
             const table = contextGlobal.tables.get(name.toLowerCase())!;
             const cols = table.columns;
             const newTuple: { [key: string]: any } = {};
-            console.log(this.tables);
             let new_map = new Map<string, Table>();
             for (let [key, value] of this.tables.entries()) {
                 if (key === name.toLocaleLowerCase()) {
@@ -99,9 +100,9 @@ export class Environment {
                 }
             }
             this.tables = new_map;
-            console.log(this.tables);
+            console.log("Tabla " + name + " renombrada a " + new_name.value + " exitosamente.");
         } else {
-            console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     }
 
@@ -114,13 +115,11 @@ export class Environment {
             const table = contextGlobal.tables.get(name_table.toLowerCase())!;
             const cols = table.columns;
             const newTuple: { [key: string]: any } = {};
-
             let new_cols = cols.filter(col => col.value !== name_column.value);
-
             table.columns = new_cols;
-
+            console.log("Columna " + name_column.value + " eliminada de tabla " + name_table + " exitosamente.");
         } else {
-            console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name_table + " no existe.");
         }
     }
 
@@ -133,15 +132,14 @@ export class Environment {
             const table = contextGlobal.tables.get(name_table.toLowerCase())!;
             const cols = table.columns;
             const newTuple: { [key: string]: any } = {};
-
             cols.forEach((item) => {
                 if (item.value == name_column) {
                     item.value = new_name_column.value;
                 }
             });
-
+            console.log("Columna " + name_column + " de tabla " + name_table + " renombrada a " + new_name_column.value + " exitosamente.");
         } else {
-            console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name_table + " no existe.");
         }
     }
 
@@ -149,9 +147,9 @@ export class Environment {
         let env: Environment | null = this;
         if (env.tables.has(name.toLowerCase())) {
             env.tables.delete(name.toLocaleLowerCase());
-            console.log("Se elimino la tabla " + name + " del entorno");
+            console.log("Tabla " + name + " eliminada exitosamente.");
         }else {
-            console.log("Error, La tabla " + name + " no existe en el entorno");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     }
 
@@ -172,10 +170,9 @@ export class Environment {
           });
     
           table.data.push(newTuple);
-          this.getTables();
-    
+          console.log("Registro agregado a la tabla " + name + " exitosamente.");
         } else {
-          console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     
     }
@@ -184,6 +181,7 @@ export class Environment {
         let env: Environment | null = this;
         const contextGlobal = this.getGlobal();
         if (contextGlobal.tables.has(name.toLowerCase())) {
+            let info = "--Mostrando columnas seleccionadas de la tabla "+ name +"--\n";
             const table = contextGlobal.tables.get(name.toLowerCase())!;
             const cols = table.columns;
             if (condition == null) {
@@ -192,21 +190,27 @@ export class Environment {
                         if (key.toLowerCase() == name.toLowerCase()) {
                             value.data.forEach((item) => {
                             columns.forEach((name_column) => {
-                            console.log(item[name_column].value);
+                            info += name_column + ": " +item[name_column].value + ", ";
                             });
+                            info = info.slice(0, -2);
+                            info += "\n";
                         });
                         }
                     }
+                    this.singleton.addConsole(info.trim());
                 } else {
                     for (const [key, value] of contextGlobal. tables) {
                         if (key.toLowerCase() == name.toLowerCase()) {
                             value.data.forEach((item) => {
                             cols.forEach((name_column) => {
-                                console.log(item[name_column.value].value);
+                                info += name_column.value + ": " + item[name_column.value].value + ", ";
                                 });
+                            info = info.slice(0, -2);
+                            info += "\n";
                             });
                         }
                     }
+                    this.singleton.addConsole(info.trim());
                 }
             } else {
                 let type = condition.getType();
@@ -218,39 +222,63 @@ export class Environment {
                             value.data.forEach((item) => {
                                 if (type == 0) {
                                     if (item[id].value == val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 1) {
                                     if (item[id].value != val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 2) {
                                     if (item[id].value < val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 3) {
                                     if (item[id].value <= val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 4) {
                                     if (item[id].value > val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 5) {
                                     if (item[id].value >= val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 }
                             });
@@ -264,48 +292,73 @@ export class Environment {
                             value.data.forEach((item) => {
                                 if (type == 0) {
                                     if (item[id].value == val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 1) {
                                     if (item[id].value != val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 2) {
                                     if (item[id].value < val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 3) {
                                     if (item[id].value <= val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 4) {
                                     if (item[id].value > val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 } else if (type == 5) {
                                     if (item[id].value >= val) {
-                                        cols.forEach((name_column) => {
-                                            console.log(item[name_column.value].value);
-                                        });
+                                        if (columns != null) {
+                                            columns.forEach((name_column) => {
+                                                info += name_column + ": " + item[name_column].value + ", ";
+                                                });
+                                                info = info.slice(0, -2);
+                                                info += "\n";
+                                        }
                                     }
                                 }
                             });
                         }
                     }
                 }
+                this.singleton.addConsole(info.trim());
             }
         } else {
-            console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     }
 
@@ -326,7 +379,7 @@ export class Environment {
                                 if (item[id].value == val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -334,7 +387,7 @@ export class Environment {
                                 if (item[id].value != val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -342,7 +395,7 @@ export class Environment {
                                 if (item[id].value < val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -350,7 +403,7 @@ export class Environment {
                                 if (item[id].value <= val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -358,7 +411,7 @@ export class Environment {
                                 if (item[id].value > val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -366,7 +419,7 @@ export class Environment {
                                 if (item[id].value >= val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -384,7 +437,7 @@ export class Environment {
                                 if (item[id].value == val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -392,7 +445,7 @@ export class Environment {
                                 if (item[id].value != val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -400,7 +453,7 @@ export class Environment {
                                 if (item[id].value < val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -408,7 +461,7 @@ export class Environment {
                                 if (item[id].value <= val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -416,7 +469,7 @@ export class Environment {
                                 if (item[id].value > val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -424,7 +477,7 @@ export class Environment {
                                 if (item[id].value >= val) {
                                     table.data.forEach((item) => {
                                         columns.forEach((col) => {
-                                            item[col.getId()] = col.getValue(env).value;
+                                            item[col.getId()].value = col.getValue(env).value;
                                         });
                                     });
                                 }
@@ -433,22 +486,20 @@ export class Environment {
                     }
                 }
             }
+            console.log("Columnas de tabla " + name + " actualizadas exitosamente.");
         } else {
-            console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     }
 
     public truncate(name: string) {
         const contextGlobal = this.getGlobal();
-    
         if (contextGlobal.tables.has(name.toLowerCase())) {
-          const table = contextGlobal.tables.get(name.toLowerCase())!;
-          console.log("Tabla truncada");
-          table.data = [];
-          console.log(table);
-    
+            const table = contextGlobal.tables.get(name.toLowerCase())!;
+            table.data = [];
+            console.log("Tabla " + name + " truncada exitosamente.");
         } else {
-          console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     } 
 
@@ -469,6 +520,7 @@ export class Environment {
                             if (type == 0) {
                                 if (item[id].value == val) {
                                     columns_to_delete.push(index);
+
                                 }
                             } else if (type == 1) {
                                 if (item[id].value != val) {
@@ -529,9 +581,14 @@ export class Environment {
                     }
                 }
             }
-            console.log(columns_to_delete);
+            columns_to_delete.sort((a, b) => b - a);
+            for (let i = 0; i < columns_to_delete.length; i++) {
+                let index = columns_to_delete[i];
+                table.data.splice(index, 1);
+            }
+            console.log("Registro(s) eliminado(s) de la tabla " + name + " exitosamente.");
         } else {
-            console.log("Error: la tabla no existe");
+            console.log("Error, la tabla " + name + " no existe.");
         }
     }
 

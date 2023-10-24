@@ -80,7 +80,7 @@
                     <button class="btnOpcion dropdown-toggle border border-secondary border-right-0 px-4 py-1" type="button" data-toggle="dropdown" aria-expanded="false">Archivo</button>
                     <ul class="dropdown-menu">
                         <li><button class="dropdown-item text-white" type="button" (click)="add_tab()">Nuevo</button></li>
-                        <li><input #inputFile type="file" style="display: none;" (change)="openFile($event)"/><button class="dropdown-item text-white" type="button" (click)="openFileExplorer(inputFile)">Abrir</button></li>
+                        <li><input #inputFile type="file" accept=".qc" style="display: none;" (change)="openFile($event)"/><button class="dropdown-item text-white" type="button" (click)="openFileExplorer(inputFile)">Abrir</button></li>
                         <li><button class="dropdown-item text-white" type="button" (click)="save()">Guardar</button></li>
                     </ul>
                 </div>
