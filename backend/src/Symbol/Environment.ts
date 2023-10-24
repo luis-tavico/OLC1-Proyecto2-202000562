@@ -228,6 +228,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 1) {
@@ -238,6 +244,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 2) {
@@ -248,6 +260,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 3) {
@@ -258,6 +276,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 4) {
@@ -268,6 +292,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 5) {
@@ -278,6 +308,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 }
@@ -298,6 +334,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 1) {
@@ -308,6 +350,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 2) {
@@ -318,6 +366,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 3) {
@@ -328,6 +382,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 4) {
@@ -338,6 +398,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 } else if (type == 5) {
@@ -348,6 +414,12 @@ export class Environment {
                                                 });
                                                 info = info.slice(0, -2);
                                                 info += "\n";
+                                        } else {
+                                            cols.forEach((name_column) => {
+                                                info += name_column.value + ": " + item[name_column.value].value + ", ";
+                                                });
+                                            info = info.slice(0, -2);
+                                            info += "\n";
                                         }
                                     }
                                 }

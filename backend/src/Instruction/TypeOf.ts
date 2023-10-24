@@ -4,23 +4,24 @@ import { Singleton } from "../Singleton/Singleton";
 import { Environment } from "../Symbol/Environment";
 import { Type } from "../Symbol/Type";
 
-export class Truncate extends Instruction {
+export class TypeOf extends Instruction {
 
-    constructor(line: number, column: number, private value: Expression, private figure: Expression) {
+    constructor(line: number, column: number, private value: Expression) {
         super(line, column);
     }
 
     public execute(environment: Environment) {
 
         const value = this.value.execute(environment);
-        const figure = this.figure.execute(environment);
         const singleton = Singleton.getInstance()
 
         if (value.value !== null) {
-            let parts = value.value.toString().split('.');
-            let integer = parts[0];
-            let tenths = parts[1].substring(0, figure.value)
-            singleton.addConsole(integer+"."+tenths);
+            if (value.type == 0) { singleton.addConsole('INT'); 
+            } else if (value.type == 1) { singleton.addConsole('DOUBLE');
+            } else if (value.type == 2) { singleton.addConsole('DATE');
+            } else if (value.type == 3) { singleton.addConsole('VARCHAR');
+            } else if (value.type == 4) { singleton.addConsole('BOOLEAN');
+            } else { singleton.addConsole('UNDEFINED');}
         }
 
     }

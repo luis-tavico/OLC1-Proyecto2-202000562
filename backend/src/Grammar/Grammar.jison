@@ -126,7 +126,15 @@
     const {Block} = require('../Instruction/Block');
     const {Statement} = require('../Instruction/Statement');
     const {Assignment} = require('../Instruction/Assignment');
+    //Native Functions
     const {Print} = require('../Instruction/Print');
+    const {Lower} = require('../Instruction/Lower');
+    const {Upper} = require('../Instruction/Upper');
+    const {Round} = require('../Instruction/Round');
+    const {Len} = require('../Instruction/Len');
+    const {TruncateTable} = require('../Instruction/TruncateTable');
+    const {TypeOf} = require('../Instruction/TypeOf');
+
     //DDL
     const {CreateTable} = require('../Instruction/CreateTable');
     const {Add} = require('../Instruction/Add')
@@ -165,7 +173,7 @@ instructions: instructions instruction { $1.push($2); $$ = $1; }
 instruction: block      { $$ = $1; }
            | statement  { $$ = $1; }
            | assignment { $$ = $1; }
-           | print      { $$ = $1; }
+           | function   { $$ = $1; }
            | ddl        { $$ = $1; }
            | dml        { $$ = $1; }
            | error      { errors.push({type: "Sintactico", error: yytext, line: this._$.first_line, column: this._$.first_column+1, message: `Error sintactico, token '${yytext}' no esperado.`}); };
@@ -183,7 +191,27 @@ variable: TK_AT TK_ID type                       { $$ = {'line': @1.first_line, 
 
 assignment: TK_SET TK_AT TK_ID TK_EQUAL expression TK_SEMI_COLON { $$ = new Assignment(@1.first_line, @1.first_column, $3, $5, symbols); }; 
 
+function : print    { $$ = $1; }
+         | lower    { $$ = $1; }
+         | upper    { $$ = $1; }
+         | round    { $$ = $1; }
+         | len      { $$ = $1; }
+         | truncate { $$ = $1; }
+         | typeof   { $$ = $1; };
+
 print: TK_PRINT expression TK_SEMI_COLON { $$ = new Print(@1.first_line, @1.first_column, $2); };
+
+lower: TK_SELECT TK_LOWER TK_LEFT_PARENTHESIS expression TK_RIGHT_PARENTHESIS TK_SEMI_COLON { $$ = new Lower(@1.first_line, @1.first_column, $4); };
+
+upper: TK_SELECT TK_UPPER TK_LEFT_PARENTHESIS expression TK_RIGHT_PARENTHESIS TK_SEMI_COLON { $$ = new Upper(@1.first_line, @1.first_column, $4); };
+
+round: TK_SELECT TK_ROUND TK_LEFT_PARENTHESIS expression TK_COMMA expression TK_RIGHT_PARENTHESIS TK_SEMI_COLON {  $$ = new Round(@1.first_line, @1.first_column, $4, $6); };
+
+len: TK_SELECT TK_LEN TK_LEFT_PARENTHESIS expression TK_RIGHT_PARENTHESIS TK_SEMI_COLON { $$ = new Len(@1.first_line, @1.first_column, $4); };
+
+truncate: TK_SELECT TK_TRUNCATE TK_LEFT_PARENTHESIS expression TK_COMMA expression TK_RIGHT_PARENTHESIS TK_SEMI_COLON {  $$ = new Truncate(@1.first_line, @1.first_column, $4, $6); };
+
+typeof: TK_SELECT TK_TYPEOF TK_LEFT_PARENTHESIS expression TK_RIGHT_PARENTHESIS TK_SEMI_COLON {  $$ = new TypeOf(@1.first_line, @1.first_column, $4); };
 
 ddl: createTable { $$ = $1; }
    | alterTable  { $$ = $1; }
@@ -203,17 +231,18 @@ attribute: TK_ID type { $$ = new Field(@1.first_line, @1.first_column, $1, $2); 
 
 dropTable: TK_DROP TK_TABLE TK_ID TK_SEMI_COLON { $$ = new DropTable(@1.first_line, @1.first_column, $3); };
 
-dml: insert   { $$ = $1; }
-   | select   { $$ = $1; }
-   | update   { $$ = $1; }
-   | truncate { $$ = $1; }
-   | delete   { $$ = $1; };
+dml: insert        { $$ = $1; }
+   | select        { $$ = $1; }
+   | update        { $$ = $1; }
+   | truncateTable { $$ = $1; }
+   | delete        { $$ = $1; };
 
 insert: TK_INSERT TK_INTO TK_ID TK_LEFT_PARENTHESIS id_list TK_RIGHT_PARENTHESIS TK_VALUES TK_LEFT_PARENTHESIS values TK_RIGHT_PARENTHESIS TK_SEMI_COLON { $$ = new Insert(@1.first_line, @1.first_column, $3, $5, $9); };
 
-select: TK_SELECT id_list TK_FROM TK_ID TK_SEMI_COLON                     { $$ = new Select(@1.first_line, @1.first_column, $2, $4, null); }
-      | TK_SELECT TK_TIMES TK_FROM TK_ID TK_SEMI_COLON                    { $$ = new Select(@1.first_line, @1.first_column, null, $4, null); }
-      | TK_SELECT id_list TK_FROM TK_ID TK_WHERE expression TK_SEMI_COLON { $$ = new Select(@1.first_line, @1.first_column, $2, $4, $6); };
+select: TK_SELECT id_list TK_FROM TK_ID TK_SEMI_COLON                      { $$ = new Select(@1.first_line, @1.first_column, $2, $4, null);   }
+      | TK_SELECT TK_TIMES TK_FROM TK_ID TK_SEMI_COLON                     { $$ = new Select(@1.first_line, @1.first_column, null, $4, null); }
+      | TK_SELECT TK_TIMES TK_FROM TK_ID TK_WHERE expression TK_SEMI_COLON { $$ = new Select(@1.first_line, @1.first_column, null, $4, $6);   }
+      | TK_SELECT id_list TK_FROM TK_ID TK_WHERE expression TK_SEMI_COLON  { $$ = new Select(@1.first_line, @1.first_column, $2, $4, $6);     };
 
 id_list: id_list TK_COMMA TK_ID { $1.push($3); $$ = $1; }
        | TK_ID                  { $$ = [$1]; };
@@ -225,7 +254,7 @@ columns: columns TK_COMMA column { $1.push($3); $$ = $1; }
 
 column: TK_ID TK_EQUAL expression { $$ = new Assignment(@1.first_line, @1.first_column, $1, $3); }; 
 
-truncate: TK_TRUNCATE TK_TABLE TK_ID TK_SEMI_COLON { $$ = new Truncate(@1.first_line, @1.first_column, $3); };
+truncateTable: TK_TRUNCATE TK_TABLE TK_ID TK_SEMI_COLON { $$ = new TruncateTable(@1.first_line, @1.first_column, $3); };
 
 delete: TK_DELETE TK_FROM TK_ID TK_WHERE expression TK_SEMI_COLON { $$ = new Delete(@1.first_line, @1.first_column, $3, $5); };
 
